@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 import streamlit as st
+import os
 from langchain_openai import ChatOpenAI
 from langchain.schema import SystemMessage, HumanMessage
 
@@ -23,13 +24,15 @@ st.divider()
 
 if selected_item == "ブラジリアン柔術":
     input_message = st.text_input(label="教えて欲しいテクニックを入力してください")
-
 else:
     input_message = st.text_input(label="教えて欲しい曲を入力してください")
 
 if st.button("実行"):
     st.divider()
-    llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0)
+
+    api_key = st.secrets.get("OPENAI_API_KEY", os.getenv("OPENAI_API_KEY"))
+
+    llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0, openai_api_key=api_key)
 
     if selected_item == "ブラジリアン柔術":
         if input_message:
