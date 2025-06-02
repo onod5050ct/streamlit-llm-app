@@ -31,6 +31,10 @@ if st.button("実行"):
     st.divider()
 
     api_key = st.secrets.get("OPENAI_API_KEY")
+    if not api_key:
+        st.error("OPENAI_API_KEYが設定されていません。StreamlitのSecretsにAPIキーを追加してください。")
+        st.stop()
+    os.environ["OPENAI_API_KEY"] = api_key
 
     llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0)
 
