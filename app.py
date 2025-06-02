@@ -4,7 +4,7 @@ import os
 from langchain_openai import ChatOpenAI
 from langchain.schema import SystemMessage, HumanMessage
 
-#load_dotenv()
+load_dotenv()
 
 st.title("趣味に関する質問アプリ")
 st.write("このアプリは、趣味に関する質問を行うためのものです。") 
@@ -30,7 +30,7 @@ else:
 if st.button("実行"):
     st.divider()
 
-    api_key = st.secrets.get("OPENAI_API_KEY")
+    api_key = st.secrets["OPENAI_API_KEY"]
     if not api_key:
         st.error("OPENAI_API_KEYが設定されていません。StreamlitのSecretsにAPIキーを追加してください。")
         st.stop()
