@@ -4,7 +4,7 @@ import os
 from langchain_openai import ChatOpenAI
 from langchain.schema import SystemMessage, HumanMessage
 
-load_dotenv()
+#load_dotenv()
 
 st.title("趣味に関する質問アプリ")
 st.write("このアプリは、趣味に関する質問を行うためのものです。") 
@@ -30,9 +30,9 @@ else:
 if st.button("実行"):
     st.divider()
 
-    api_key = st.secrets.get("OPENAI_API_KEY", os.getenv("OPENAI_API_KEY"))
+    api_key = st.secrets.get("OPENAI_API_KEY")
 
-    llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0, openai_api_key=api_key)
+    llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0)
 
     if selected_item == "ブラジリアン柔術":
         if input_message:
