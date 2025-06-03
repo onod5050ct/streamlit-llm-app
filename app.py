@@ -27,10 +27,8 @@ if selected_item == "ブラジリアン柔術":
 else:
     input_message = st.text_input(label="教えて欲しい曲を入力してください")
 
-if st.button("実行"):
-    st.divider()
-
-    api_key = st.secrets["OPENAI_API_KEY"]
+def get_llm_response(input_message: str, selected_item: str) -> str:
+    api_key = st.secrets.get("OPENAI_API_KEY")
     if not api_key:
         st.error("OPENAI_API_KEYが設定されていません。StreamlitのSecretsにAPIキーを追加してください。")
         st.stop()
@@ -39,23 +37,24 @@ if st.button("実行"):
     llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0)
 
     if selected_item == "ブラジリアン柔術":
-        if input_message:
-            messages = [
-                SystemMessage(content="あなたはブラジリアン柔術の専門家です。テクニックや練習方法について答えてください。"),
-                HumanMessage(content=input_message),
-            ]
-            result = llm(messages)
-            st.write(f"回答: **{result.content}**")
-        else:
-            st.error("教えて欲しいテクニックを入力してから「実行」ボタンを押してください。")
+        system_prompt = "あなたはブラジリアン柔術の専門家です。テクニックや練習方法について答えてください。"
     else:
-        if input_message:
-            messages = [
-                SystemMessage(content="あなたはピアノ教師です。曲について聞かれたらその曲の特徴と練習方法を答えてください。"),
-                HumanMessage(content=input_message),
-            ]
-            result = llm(messages)
-            st.write(f"回答: **{result.content}**")
+        system_prompt = "あなたはピアノ教師です。曲について聞かれたらその曲の特徴と練習方法を答えてください。"
+
+    messages = [
+        SystemMessage(content=system_prompt),
+        HumanMessage(content=input_message),
+    ]
+    result = llm(messages)
+    return result.content
+
+if st.button("実行"):
+    st.divider()
+    if not input_message:
+        if selected_item == "ブラジリアン柔術":
+            st.error("教えて欲しいテクニックを入力してから「実行」ボタンを押してください。")
         else:
             st.error("教えて欲しい曲を入力してから「実行」ボタンを押してください。")
-
+    else:
+        response = get_llm_response(input_message, selected_item)
+        st.write(f"回答: **{response}**")
